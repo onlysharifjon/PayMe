@@ -127,7 +127,7 @@ Control.last-run
 Control.ca-list
 Control.ca-bundle
 Control.system-ca-bundle
-GitHub.sublime-settings
+GitHub.sublime-settings`
 
 # Visual Studio Code #
 .vscode/*

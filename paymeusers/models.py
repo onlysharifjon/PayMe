@@ -16,7 +16,8 @@ class BaseCard(models.Model):
     ]
     card_type = models.CharField(max_length=50, choices=CARD_TYPES)
     number = models.CharField(max_length=16, unique=True)
-    pin_code = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(9999)])
+    # pin_code = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(9999)])
+    pin_code = models.CharField(max_length=4)
     owner_name = models.ForeignKey(User, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
@@ -43,17 +44,33 @@ class VisaGold(BaseCard):
 class VisaClassic(BaseCard):
     pass
 
-# class TolovlarTarixi(models.Model):
-#     time = models.DateTimeField(auto_now_add=True)
-#     sender = models.ForeignKey('Kartalar', on_delete=models.CASCADE, related_name='sent_transactions')
-#     recipient = models.ForeignKey('Kartalar', on_delete=models.CASCADE, related_name='received_transactions')
-#     money = models.IntegerField()
-#     CHOISE = (
-#         ('O`tkazmalar', 'O`tkazmalar'),
-#         ('Taksi', "Taksi"),
-#         ('Oziq-Ovqat', 'Oziq-Ovqat'),
-#     )
-#     why = models.CharField(choices=CHOISE, max_length=20)
-#
-#     def __str__(self):
-#         return str(self.sender)
+
+class PaymentHistory(models.Model):
+    who = models.ForeignKey(User,on_delete=models.CASCADE)
+    CHOISE = (
+        ('Taksi','Taksi'),
+        ('Oziq-ovqat','Oziq-ovqat'),
+        ('Texnika','Texnika'),
+        ('O`tkazmalar','O`tkazmalar'),
+        ('Kiyim','Kiyim'),
+        ('Transport','Transport'),
+        ('Komunal-To`lovlar','Komunal-To`lovlar'),
+        ('Internet-Xizmatlari','Internet-Xizmatlari'),
+        ('Telefoniya','Telefoniya'),
+        ('Ta`lim','Ta`lim'),
+        ('Jarimalar','Jarimalar'),
+        ('Madaniy-Hordiq','Madaniy-Hordiq'),
+        ('Xayriya-Fondlari','Xayriya-Fondlari'),
+        ('Dorixona','Dorixona'),
+        ('Boshqalar','Boshqalar'),
+        ('Soliqlar','Soliqlar'),
+        ('Notarius','Notarius'),
+        ('Kredit','Kredit')
+        )
+    where = models.CharField(choices=CHOISE,max_length=40)
+    time = models.DateTimeField(auto_now_add=True)
+    money = models.IntegerField(default=0)
+    def __str__(self) -> str:
+        return str(self.who)
+
+    
