@@ -1,8 +1,12 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from .models import PaymeUser
 
 
-class Tarjimon_Odamlar(serializers.ModelSerializer):
+class QiynSerializer(serializers.Serializer):
+    phone = serializers.IntegerField()
+    password = serializers.CharField(max_length=30)
+
+class OsonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        model = PaymeUser
+        fields = '__all__'

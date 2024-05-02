@@ -1,9 +1,17 @@
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
 from django.db import models
 from datetime import timedelta
+
+
+class PaymeUser(models.Model):
+    name = models.CharField(max_length=30)
+    password = models.CharField(max_length=30)
+    phone = models.IntegerField(unique=True)
+    def __str__(self):
+        return str(self.name)
 
 
 # Create your models here.
@@ -18,7 +26,7 @@ class BaseCard(models.Model):
     number = models.CharField(max_length=16, unique=True)
     # pin_code = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(9999)])
     pin_code = models.CharField(max_length=4)
-    owner_name = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner_name = models.ForeignKey(PaymeUser, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -29,7 +37,7 @@ class BaseCard(models.Model):
 
 
 class UzCard(BaseCard):
-    def  __str__(self):
+    def __str__(self):
         return self.number
 
 
@@ -46,31 +54,30 @@ class VisaClassic(BaseCard):
 
 
 class PaymentHistory(models.Model):
-    who = models.ForeignKey(User,on_delete=models.CASCADE)
+    who = models.ForeignKey(PaymeUser, on_delete=models.CASCADE)
     CHOISE = (
-        ('Taksi','Taksi'),
-        ('Oziq-ovqat','Oziq-ovqat'),
-        ('Texnika','Texnika'),
-        ('O`tkazmalar','O`tkazmalar'),
-        ('Kiyim','Kiyim'),
-        ('Transport','Transport'),
-        ('Komunal-To`lovlar','Komunal-To`lovlar'),
-        ('Internet-Xizmatlari','Internet-Xizmatlari'),
-        ('Telefoniya','Telefoniya'),
-        ('Ta`lim','Ta`lim'),
-        ('Jarimalar','Jarimalar'),
-        ('Madaniy-Hordiq','Madaniy-Hordiq'),
-        ('Xayriya-Fondlari','Xayriya-Fondlari'),
-        ('Dorixona','Dorixona'),
-        ('Boshqalar','Boshqalar'),
-        ('Soliqlar','Soliqlar'),
-        ('Notarius','Notarius'),
-        ('Kredit','Kredit')
-        )
-    where = models.CharField(choices=CHOISE,max_length=40)
+        ('Taksi', 'Taksi'),
+        ('Oziq-ovqat', 'Oziq-ovqat'),
+        ('Texnika', 'Texnika'),
+        ('O`tkazmalar', 'O`tkazmalar'),
+        ('Kiyim', 'Kiyim'),
+        ('Transport', 'Transport'),
+        ('Komunal-To`lovlar', 'Komunal-To`lovlar'),
+        ('Internet-Xizmatlari', 'Internet-Xizmatlari'),
+        ('Telefoniya', 'Telefoniya'),
+        ('Ta`lim', 'Ta`lim'),
+        ('Jarimalar', 'Jarimalar'),
+        ('Madaniy-Hordiq', 'Madaniy-Hordiq'),
+        ('Xayriya-Fondlari', 'Xayriya-Fondlari'),
+        ('Dorixona', 'Dorixona'),
+        ('Boshqalar', 'Boshqalar'),
+        ('Soliqlar', 'Soliqlar'),
+        ('Notarius', 'Notarius'),
+        ('Kredit', 'Kredit')
+    )
+    where = models.CharField(choices=CHOISE, max_length=40)
     time = models.DateTimeField(auto_now_add=True)
     money = models.IntegerField(default=0)
+
     def __str__(self) -> str:
         return str(self.who)
-
-    
