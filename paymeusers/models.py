@@ -32,25 +32,25 @@ class BaseCard(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     expired = models.DateTimeField(default=timezone.now() + timedelta(days=365 * 4), editable=False)
 
-    class Meta:
-        abstract = True
+    # class Meta:
+    #     abstract = True
 
 
-class UzCard(BaseCard):
-    def __str__(self):
-        return self.number
-
-
-class HumoCard(BaseCard):
-    pass
-
-
-class VisaGold(BaseCard):
-    pass
-
-
-class VisaClassic(BaseCard):
-    pass
+# class UzCard(BaseCard):
+#     def __str__(self):
+#         return self.number
+#
+#
+# class HumoCard(BaseCard):
+#     pass
+#
+#
+# class VisaGold(BaseCard):
+#     pass
+#
+#
+# class VisaClassic(BaseCard):
+#     pass
 
 
 class PaymentHistory(models.Model):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PaymeUser
+from .models import *
 
 
 class QiynSerializer(serializers.Serializer):
@@ -9,4 +9,10 @@ class QiynSerializer(serializers.Serializer):
 class OsonSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymeUser
+        fields = '__all__'
+
+
+class KartaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BaseCard
         fields = '__all__'
