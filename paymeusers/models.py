@@ -10,6 +10,7 @@ class PaymeUser(models.Model):
     name = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
     phone = models.IntegerField(unique=True)
+
     def __str__(self):
         return str(self.name)
 
@@ -28,6 +29,7 @@ class BaseCard(models.Model):
     pin_code = models.CharField(max_length=4)
     owner_name = models.ForeignKey(PaymeUser, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
+    money = models.IntegerField()
 
     created = models.DateTimeField(auto_now_add=True)
     expired = models.DateTimeField(default=timezone.now() + timedelta(days=365 * 4), editable=False)
@@ -81,3 +83,15 @@ class PaymentHistory(models.Model):
 
     def __str__(self) -> str:
         return str(self.who)
+
+
+class Bank(models.Model):
+    money = models.IntegerField()
+    name = models.CharField(max_length=255)
+
+
+class Transactions(models.Model):
+    sender = models.CharField(max_length=16)
+    getter = models.CharField(max_length=16)
+    time = models.DateTimeField(auto_now_add=True)
+    money = models.IntegerField(default=0)

@@ -93,10 +93,11 @@ class DeleteCard(APIView):
     def delete(self, request):
         karta_raqami = request.data.get('card_number')
         try:
-             BaseCard.objects.all().filter(number=karta_raqami).delete()
-             return Response({'Xabar': 'Karta o`chirildi'}, status=200)
+            BaseCard.objects.all().filter(number=karta_raqami).delete()
+            return Response({'Xabar': 'Karta o`chirildi'}, status=200)
         except:
             return Response({'Xabar': 'Bunday karta topilmadi'}, status=404)
+
 
 class DeleteUser(APIView):
     @swagger_auto_schema(request_body=DeletePaymeuserSerializer)
@@ -111,3 +112,43 @@ class DeleteUser(APIView):
 
         except:
             return Response({'Xabar': 'Bunday user mavjud emas'}, status=404)
+
+
+class ChangePassword(APIView):
+    @swagger_auto_schema(request_body=ChangePasswordSerializer)
+    def patch(self, request):
+        phone = request.data.get('phone')
+        name = request.data.get('name')
+        new_password = request.data.get('new_password')
+        confirm_password = request.data.get('confirm_password')
+        if confirm_password == new_password:
+            user = PaymeUser.objects.all().filter(name=name, phone=phone).update(password=new_password)
+            return Response({'parol': "o`zgartirildi"}, status=200)
+        else:
+            return Response({'xabar': "Parol to`g`ri kiritildmadi"})
+
+
+class Transaction(APIView):
+    @swagger_auto_schema(request_body=Transaction)
+    def post(self, request):
+        card_sender = request.data.get('card_sender')
+        card_getter = request.data.get('card_getter')
+        money = request.data.get('money')
+        money_commissiya = money + (money * 0.01)
+        user_card = BaseCard.objects.all().filter(number=card_sender)
+
+        for i in user_card:
+            if i.money >= money_commissiya:
+                i.money -= money_commissiya
+                user_card.update(money=i.money - money_commissiya)
+            else:
+                return Response({'msg': "Sizda pul yoq"})
+
+        filter_getter = BaseCard.objects.all().filter(number=card_getter)
+        for i in filter_getter:
+            filter_getter.update(money=i.money + money)
+        bank_name = Bank.objects.all().filter(name="PayMe")
+        for i in bank_name:
+            bank_name.update(money=i.money + (money * 0.01))
+        Transactions.objects.create(sender=card_sender, getter=card_getter, money=money_commissiya)
+        return Response({'xabar:': f"Sizdan {money_commissiya} miqdorida pul yechildi"})
