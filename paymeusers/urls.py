@@ -12,5 +12,8 @@ urlpatterns = [
     path('delete/card', DeleteCard.as_view(), name='kartani o`chirish'),
     path('delete/user', DeleteUser.as_view(), name='userni o`chirish'),
     path('change/password', ChangePassword.as_view(), name='parolni o`zgartirish'),
-    path('transaction/', Transaction.as_view(), name='tranzaktsiya qilish')
+    path('transaction/', Transaction.as_view(), name='tranzaktsiya qilish'),
+    path('user/id/<int:id>', SearchUser.as_view()),
+    path('top/money/', SortedMoney.as_view(), name='Rating pul bo`yicha saralash'),
+    path('searcher/',SearchByNumber.as_view())
 ]

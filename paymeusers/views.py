@@ -152,3 +152,34 @@ class Transaction(APIView):
             bank_name.update(money=i.money + (money * 0.01))
         Transactions.objects.create(sender=card_sender, getter=card_getter, money=money_commissiya)
         return Response({'xabar:': f"Sizdan {money_commissiya} miqdorida pul yechildi"})
+
+
+class SearchUser(APIView):
+    def get(self, request, id):
+        a = PaymeUser.objects.all().filter(id=id)
+        serializer = OsonSerializer(a, many=True)
+        return Response(serializer.data)
+        # if serializer.is_valid():
+        #     return Response(serializer.data)
+        # else:
+        #     return Response(serializer.errors)
+
+
+class SortedMoney(APIView):
+    def get(self, request):
+        money_sorted = Transactions.objects.all().order_by('-money')
+        serializer = HistoryTransactions(money_sorted, many=True)
+        return Response(serializer.data)
+
+
+class SearchByNumber(APIView):
+    @swagger_auto_schema(request_body=DeletePaymeuserSerializer)
+    def post(self, request):
+        try:
+            phone = request.data.get('phone_number')
+            filter_1 = PaymeUser.objects.all().filter(phone=phone).first()
+            filter_2 = BaseCard.objects.all().filter(owner_name_id=filter_1.id)
+            serializer = KartaSerializer(filter_2, many=True)
+            return Response(serializer.data)
+        except:
+            return Response({'msg': "Bunday raqam mavjud emas"})
