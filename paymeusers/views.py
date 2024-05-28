@@ -183,3 +183,24 @@ class SearchByNumber(APIView):
             return Response(serializer.data)
         except:
             return Response({'msg': "Bunday raqam mavjud emas"})
+
+
+class TopMonthTransactionUser(APIView):
+    def get(self, request):
+        new_database = {}
+        fake_database = {}
+        all_users = Transactions.objects.all()
+        for i in all_users:
+            fake_database[i.sender] = 0
+        for d in all_users:
+            fake_database[d.sender] += d.money
+        for i in fake_database.keys():
+
+            user_name = BaseCard.objects.all().filter(number=i)
+            for d in user_name:
+                print(i, d.owner_name)
+                money = fake_database[i]
+                new_database[str(d.owner_name)] = money
+
+        sorted_database = dict(sorted(new_database.items(), key=lambda item: item[1],reverse=True))
+        return Response(sorted_database)

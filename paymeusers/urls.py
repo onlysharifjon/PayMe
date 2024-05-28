@@ -15,5 +15,6 @@ urlpatterns = [
     path('transaction/', Transaction.as_view(), name='tranzaktsiya qilish'),
     path('user/id/<int:id>', SearchUser.as_view()),
     path('top/money/', SortedMoney.as_view(), name='Rating pul bo`yicha saralash'),
-    path('searcher/',SearchByNumber.as_view())
+    path('searcher/', SearchByNumber.as_view()),
+    path('top/transtaction/', TopMonthTransactionUser.as_view())
 ]
